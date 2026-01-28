@@ -14,15 +14,20 @@ def get_secure_path(path: str, workspace_id: str, agent_id: str, session_id: str
     - Validates ID parameters to prevent injection attacks
     - Uses realpath() to resolve symlinks and prevent symlink-based traversal
     - Strict boundary checking to ensure paths stay within sandbox
+    - Returns the resolved path to prevent TOCTOU issues
+    
+    Note: There is still a potential TOCTOU race between validation and use.
+    Callers should use appropriate flags (e.g., O_NOFOLLOW) when opening files
+    if symlink following must be prevented.
     
     Args:
         path: File path to resolve (relative to session root)
         workspace_id: Workspace identifier
-        agent_id: Agent identifier  
+        agent_id: Agent identifier
         session_id: Session identifier
         
     Returns:
-        Secure absolute path within the sandbox
+        Secure absolute path within the sandbox (with symlinks resolved)
         
     Raises:
         ValueError: If parameters are invalid or path escapes sandbox
@@ -34,7 +39,7 @@ def get_secure_path(path: str, workspace_id: str, agent_id: str, session_id: str
     # Check for path traversal attempts in IDs
     for param_name, param_value in [
         ("workspace_id", workspace_id),
-        ("agent_id", agent_id), 
+        ("agent_id", agent_id),
         ("session_id", session_id)
     ]:
         if not param_value.strip():
@@ -62,8 +67,14 @@ def get_secure_path(path: str, workspace_id: str, agent_id: str, session_id: str
     final_path_real = os.path.realpath(final_path)
     session_dir_real = os.path.realpath(session_dir)
     
+    # Normalize case for case-insensitive file systems
+    final_path_normalized = os.path.normcase(final_path_real)
+    session_dir_normalized = os.path.normcase(session_dir_real)
+    
     # Verify path is within session_dir (must start with session_dir + separator, or be exact match)
-    if not (final_path_real.startswith(session_dir_real + os.sep) or final_path_real == session_dir_real):
+    if not (final_path_normalized.startswith(session_dir_normalized + os.sep) or
+            final_path_normalized == session_dir_normalized):
         raise ValueError(f"Access denied: Path '{path}' is outside the session sandbox.")
 
-    return final_path
+    # Return the resolved path (not the original) to prevent TOCTOU issues
+    return final_path_real
