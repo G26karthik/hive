@@ -19,6 +19,8 @@ from contextlib import contextmanager
 from dataclasses import dataclass, field
 from typing import Any
 
+from framework.constants import DEFAULT_SANDBOX_TIMEOUT_SECONDS
+
 # Safe builtins whitelist
 SAFE_BUILTINS = {
     # Basic types
@@ -190,7 +192,7 @@ class CodeSandbox:
     Sandboxed environment for executing dynamic code.
 
     Usage:
-        sandbox = CodeSandbox(timeout_seconds=5)
+        sandbox = CodeSandbox(timeout_seconds=DEFAULT_SANDBOX_TIMEOUT_SECONDS)
         result = sandbox.execute(
             code="x = 1 + 2\\nresult = x * 3",
             inputs={"multiplier": 2},
@@ -201,7 +203,7 @@ class CodeSandbox:
 
     def __init__(
         self,
-        timeout_seconds: int = 10,
+        timeout_seconds: int = DEFAULT_SANDBOX_TIMEOUT_SECONDS,
         allowed_modules: set[str] | None = None,
         safe_builtins: dict[str, Any] | None = None,
     ):

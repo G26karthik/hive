@@ -15,6 +15,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
 
+from framework.constants import DEFAULT_PARALLEL_BRANCH_TIMEOUT_SECONDS
 from framework.graph.edge import EdgeSpec, GraphSpec
 from framework.graph.goal import Goal
 from framework.graph.node import (
@@ -74,7 +75,7 @@ class ParallelExecutionConfig:
     memory_conflict_strategy: str = "last_wins"  # "last_wins", "first_wins", "error"
 
     # Timeout per branch in seconds
-    branch_timeout_seconds: float = 300.0
+    branch_timeout_seconds: float = DEFAULT_PARALLEL_BRANCH_TIMEOUT_SECONDS
 
 
 class GraphExecutor:
