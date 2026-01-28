@@ -3,7 +3,7 @@ import subprocess
 
 from mcp.server.fastmcp import FastMCP
 
-from aden_tools.constants import DEFAULT_COMMAND_TIMEOUT_SECONDS
+
 
 from ..security import WORKSPACES_DIR, get_secure_path
 
@@ -55,7 +55,7 @@ def register_tools(mcp: FastMCP) -> None:
                 cwd=secure_cwd,
                 capture_output=True,
                 text=True,
-                timeout=DEFAULT_COMMAND_TIMEOUT_SECONDS,
+                timeout=60,
             )
 
             return {
@@ -67,6 +67,6 @@ def register_tools(mcp: FastMCP) -> None:
                 "cwd": cwd or ".",
             }
         except subprocess.TimeoutExpired:
-            return {"error": f"Command timed out after {DEFAULT_COMMAND_TIMEOUT_SECONDS} seconds"}
+            return {"error": "Command timed out after 60 seconds"}
         except Exception as e:
             return {"error": f"Failed to execute command: {str(e)}"}

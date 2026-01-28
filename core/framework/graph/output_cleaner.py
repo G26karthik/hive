@@ -13,10 +13,7 @@ import re
 from dataclasses import dataclass, field
 from typing import Any
 
-from framework.constants import (
-    DEFAULT_CLEANSING_MAX_RETRIES,
-    DEFAULT_MAX_TOKENS,
-)
+
 
 logger = logging.getLogger(__name__)
 
@@ -71,7 +68,7 @@ class CleansingConfig:
 
     enabled: bool = True
     fast_model: str = "cerebras/llama-3.3-70b"  # Fast, cheap model for cleaning
-    max_retries: int = DEFAULT_CLEANSING_MAX_RETRIES
+    max_retries: int = 2
     cache_successful_patterns: bool = True
     fallback_to_raw: bool = True  # If cleaning fails, pass raw output
     log_cleanings: bool = True  # Log when cleansing happens

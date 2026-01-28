@@ -4,7 +4,7 @@ import os
 from collections.abc import Callable
 from typing import Any
 
-from framework.constants import DEFAULT_ANTHROPIC_MODEL
+
 from framework.llm.litellm import LiteLLMProvider
 from framework.llm.provider import LLMProvider, LLMResponse, Tool, ToolResult, ToolUse
 
@@ -39,7 +39,7 @@ class AnthropicProvider(LLMProvider):
     def __init__(
         self,
         api_key: str | None = None,
-        model: str = DEFAULT_ANTHROPIC_MODEL,
+        model: str = "claude-haiku-4-5-20251001",
     ):
         """
         Initialize the Anthropic provider.

@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-from framework.constants import DEFAULT_MAX_GRAPH_STEPS, DEFAULT_MAX_RETRIES_PER_NODE
+
 from framework.graph import Goal
 from framework.graph.edge import AsyncEntryPointSpec, EdgeCondition, EdgeSpec, GraphSpec
 from framework.graph.executor import ExecutionResult, GraphExecutor
@@ -130,8 +130,8 @@ def load_agent_export(data: str | dict) -> tuple[GraphSpec, Goal]:
         pause_nodes=graph_data.get("pause_nodes", []),  # Support pause/resume architecture
         nodes=nodes,
         edges=edges,
-        max_steps=graph_data.get("max_steps", DEFAULT_MAX_GRAPH_STEPS),
-        max_retries_per_node=graph_data.get("max_retries_per_node", DEFAULT_MAX_RETRIES_PER_NODE),
+        max_steps=graph_data.get("max_steps", 100),
+        max_retries_per_node=graph_data.get("max_retries_per_node", 3),
         description=graph_data.get("description", ""),
     )
 
